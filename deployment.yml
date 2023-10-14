@@ -1,0 +1,411 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mssql-availability-group-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-primary
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mssql-primary
+        lblabel: mssql-ha
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mssql-secondary1
+                - mssql-secondary2
+            topologyKey: "kubernetes.io/hostname"    
+      terminationGracePeriodSeconds: 10
+      hostname: mssql-primary
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: mssql-primary
+          image: registry.buluttakin.com/mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_PID
+              value: "Developer"
+            - name: MSSQL_ENABLE_HADR
+              value: "1"
+            - name: MSSQL_AGENT_ENABLED
+              value: "true"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: mssqldb
+              mountPath: /var/opt/mssql
+          resources:
+            limits:
+              memory: 4G
+        - name: dxe
+          image: registry.buluttakin.com/dh2i/dxe
+          env:
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: dxe
+              mountPath: "/etc/dh2i"
+      volumes:
+        - name: mssqldb
+          persistentVolumeClaim:
+            claimName: mssql-pdb1
+        - name: dxe
+          persistentVolumeClaim:
+            claimName: dxe-p1
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mssql-availability-group-secondary1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-secondary1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mssql-secondary1
+        lblabel: mssql-ha
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mssql-primary
+                - mssql-secondary2
+            topologyKey: "kubernetes.io/hostname"    
+      terminationGracePeriodSeconds: 10
+      hostname: mssql-secondary1
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: mssql-secondary1
+          image: registry.buluttakin.com/mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_PID
+              value: "Developer"
+            - name: MSSQL_ENABLE_HADR
+              value: "1"
+            - name: MSSQL_AGENT_ENABLED
+              value: "true"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: mssqldb
+              mountPath: /var/opt/mssql
+          resources:
+            limits:
+              memory: 4G
+        - name: dxe
+          image: registry.buluttakin.com/dh2i/dxe
+          env:
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: dxe
+              mountPath: "/etc/dh2i"
+      volumes:
+        - name: mssqldb
+          persistentVolumeClaim:
+            claimName: mssql-s1db
+        - name: dxe
+          persistentVolumeClaim:
+            claimName: dxe-s1
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mssql-availability-group-secondary2-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-secondary2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mssql-secondary2
+        lblabel: mssql-ha
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mssql-secondary1
+                - mssql-primary
+            topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 10
+      hostname: mssql-secondary2
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: mssql-secondary2
+          image: registry.buluttakin.com/mcr.microsoft.com/mssql/server:2022-latest
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_PID
+              value: "Developer"
+            - name: MSSQL_ENABLE_HADR
+              value: "1"
+            - name: MSSQL_AGENT_ENABLED
+              value: "true"
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: mssqldb
+              mountPath: /var/opt/mssql
+          resources:
+            limits:
+              memory: 4G
+        - name: dxe
+          image: registry.buluttakin.com/dh2i/dxe
+          env:
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql-secret
+                  key: SA_PASSWORD
+          volumeMounts:
+            - name: dxe
+              mountPath: "/etc/dh2i"
+      volumes:
+        - name: mssqldb
+          persistentVolumeClaim:
+            claimName: mssql-s2db
+        - name: dxe
+          persistentVolumeClaim:
+            claimName: dxe-s2
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mssql-pdb1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mssql-s1db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mssql-s2db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: dxe-p1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: dxe-s1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: dxe-s2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mssql-primary
+spec:
+  selector:
+    app: mssql-primary
+  ports:
+    - name: dxl
+      protocol: TCP
+      port: 7979
+    - name: dxc-tcp
+      protocol: TCP
+      port: 7980
+    - name: dxc-udp
+      protocol: UDP
+      port: 7981
+    - name: listener
+      protocol: TCP
+      port: 14033
+    - name: sql
+      port: 1433
+      targetPort: 1433
+    - name: endpoint
+      port: 5022
+      targetPort: 5022
+  clusterIP: None
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mssql-secondary1
+spec:
+  selector:
+    app: mssql-secondary1
+  ports:
+    - name: dxl
+      protocol: TCP
+      port: 7979
+    - name: dxc-tcp
+      protocol: TCP
+      port: 7980
+    - name: dxc-udp
+      protocol: UDP
+      port: 7981
+    - name: listener
+      protocol: TCP
+      port: 14033
+    - name: sql
+      port: 1433
+      targetPort: 1433
+    - name: endpoint
+      port: 5022
+      targetPort: 5022
+  clusterIP: None
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mssql-secondary2
+spec:
+  selector:
+    app: mssql-secondary2
+  ports:
+    - name: dxl
+      protocol: TCP
+      port: 7979
+    - name: dxc-tcp
+      protocol: TCP
+      port: 7980
+    - name: dxc-udp
+      protocol: UDP
+      port: 7981
+    - name: listener
+      protocol: TCP
+      port: 14033
+    - name: sql
+      port: 1433
+      targetPort: 1433
+    - name: endpoint
+      port: 5022
+      targetPort: 5022
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-cluster-nodeport
+spec:
+  type: NodePort
+  selector:
+    lblabel: mssql-ha
+  ports:
+  - name: sql
+    protocol: TCP
+    port: 1433
+    targetPort: 1433
+    nodePort: 30433
+  - name: listener
+    protocol: TCP
+    port: 14033
+    targetPort: 14033
+    nodePort: 30033
+  - name: dxe
+    protocol: TCP
+    port: 7979
+    targetPort: 7979
+    nodePort: 30979
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-primary-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: mssql-primary
+  ports:
+  - name: sql
+    protocol: TCP
+    port: 1433
+    targetPort: 1433
+    nodePort: 31111      
