@@ -8,3 +8,4 @@
 
 ✔️ Automatic Failover and Failback handler (Quorum)
 
+✔️ Failover handler Based On [DH2I Dxe Enterprise ](https://dh2i.com/dxenterprise-high-availability/)
