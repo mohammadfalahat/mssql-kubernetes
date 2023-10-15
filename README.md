@@ -58,6 +58,10 @@ After making these changes, run `installer.sh`:
 ./installer.sh
 ```
 
+When the installation is finished, it will provide you with a SQL query code. Log in to the primary node with the following port and credentials: Worker1_IP, 31111; user=SA; Password=DB_PASSWORD. Run that query just once.
+
+Now, you can connect directly to the Kubernetes load balancer service using port 30433, which connects you to one of the MSSQL instances randomly.
+
 # Done!
 
 ### External Load Balancer
@@ -76,6 +80,54 @@ backend sql_backend
     server sql-primary {{WORKER1_IP}}:30433 check inter 2s rise 1 fall 1
     server sql-secondary1 {{WORKER2_IP}}:30433 check inter 2s rise 1 fall 1
     server sql-secondary2 {{WORKER3_IP}}:30433 check inter 2s rise 1 fall 1
+```
+
+### Stress test
+
+You can test failover handling and performance with a stress test program. Here is an example in Golang. While it's running, you can power off the primary worker node and check the failover performance.
+
+```
+package main
+
+import (
+	"database/sql"
+	"fmt"
+	"log"
+	"math/rand"
+	"time"
+	_ "github.com/denisenkom/go-mssqldb"
+)
+
+func GenerateRandomName() string {
+	adjectives := []string{"Happy", "Clever", "Brave", "Eager", "Friendly", "Gentle", "Kind", "Lively", "Polite", "Witty"}
+	nouns := []string{"Panda", "Tiger", "Dolphin", "Penguin", "Elephant", "Kangaroo", "Koala", "Giraffe", "Lion", "Zebra"}
+
+	rand.Seed(time.Now().UnixNano())
+	randomAdjective := adjectives[rand.Intn(len(adjectives))]
+	randomNoun := nouns[rand.Intn(len(nouns))]
+
+	return randomAdjective + " " + randomNoun
+}
+
+func main() {
+	connString := "server={{EXTERNAL_LB_IP_OR_WORKER_IP, 1433_FOR_EXTERNAL_LB_30443_FOR_WORKER_IP}};user id=SA;password={{DB_PASSWORD}};database=db1"
+
+	db, err := sql.Open("sqlserver", connString)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	for {
+		randomName := GenerateRandomName()
+		insertQuery := fmt.Sprintf("INSERT INTO Customers (name) VALUES ('%s')", randomName)
+		_, err := db.Exec(insertQuery)
+		if err != nil {
+			log.Println("Error executing INSERT query:", err)
+		}
+		fmt.Printf("Inserted: %s\n", randomName)
+		time.Sleep(200 * time.Millisecond)
+	}
+}
 ```
 
 # How does it work
