@@ -32,7 +32,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: mssql-primary
-          image: registry.buluttakin.com/mcr.microsoft.com/mssql/server:2022-latest
+          image: mcr.microsoft.com/mssql/server:2022-latest
           env:
             - name: ACCEPT_EULA
               value: "Y"
@@ -54,7 +54,7 @@ spec:
             limits:
               memory: 4G
         - name: dxe
-          image: registry.buluttakin.com/dh2i/dxe
+          image: dh2i/dxe
           env:
             - name: MSSQL_SA_PASSWORD
               valueFrom:
@@ -106,7 +106,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: mssql-secondary1
-          image: registry.buluttakin.com/mcr.microsoft.com/mssql/server:2022-latest
+          image: mcr.microsoft.com/mssql/server:2022-latest
           env:
             - name: ACCEPT_EULA
               value: "Y"
@@ -128,7 +128,7 @@ spec:
             limits:
               memory: 4G
         - name: dxe
-          image: registry.buluttakin.com/dh2i/dxe
+          image: dh2i/dxe
           env:
             - name: MSSQL_SA_PASSWORD
               valueFrom:
@@ -180,7 +180,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: mssql-secondary2
-          image: registry.buluttakin.com/mcr.microsoft.com/mssql/server:2022-latest
+          image: mcr.microsoft.com/mssql/server:2022-latest
           env:
             - name: ACCEPT_EULA
               value: "Y"
@@ -202,7 +202,7 @@ spec:
             limits:
               memory: 4G
         - name: dxe
-          image: registry.buluttakin.com/dh2i/dxe
+          image: dh2i/dxe
           env:
             - name: MSSQL_SA_PASSWORD
               valueFrom:
