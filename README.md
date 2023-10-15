@@ -67,7 +67,8 @@ Now, you can connect directly to the Kubernetes load balancer service using port
 
 ### External Load Balancer
 
-If you are using HAProxy as your external load balancer, you can add this configuration to keep nodes in the background and achieve higher availability in the event of a node failure.
+An external load balancer is a crucial component for distributing incoming network traffic across multiple servers to ensure high availability and efficient resource utilization. In your setup, you're using HAProxy to fulfill this role. The configuration provided is designed to keep your database nodes operating smoothly, even in the event of a node failure.
+By configuring the external load balancer in this way, you achieve higher availability and load distribution for your MSSQL service. In case one of the nodes becomes unavailable, the load balancer will automatically route incoming connections to a healthy node.
 
 ```
 frontend sql_frontend
@@ -86,6 +87,9 @@ backend sql_backend
 ### Stress test
 
 You can test failover handling and performance with a stress test program. [Here is an example in Golang](https://github.com/mohammadfalahat/mssql-kubernetes/blob/main/stresstest.go). While it's running, you can power off the primary worker node and check the failover performance.
+
+The stress test program is a tool for evaluating the failover handling and performance of your MSSQL cluster. Stress tests simulate heavy usage and various conditions to ensure your system can handle high loads and failover events effectively.
+While the stress test is running, you can simulate a primary node failure (e.g., power off the primary worker node). This is a critical test to ensure that the failover mechanism works as expected and the secondary nodes can seamlessly take over, maintaining service availability.
 
 # How does it work
 soon ...
