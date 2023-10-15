@@ -45,7 +45,8 @@ kubectl get pod -l lblabel=mssql-ha -o wide
 If the MSSQL pods are in a running state and the PVCs are in a bound state, then run the installer:
 
 ```
-wget https://raw.githubusercontent.com/mohammadfalahat/mssql-kubernetes/main/installer.sh && chmod +x installer.sh && vim installer.sh
+wget https://raw.githubusercontent.com/mohammadfalahat/mssql-kubernetes/main/installer.sh \
+ && chmod +x installer.sh && vim installer.sh
 ```
 
 replace your license with DH2I_LICENSE variable inside `installer.sh`
