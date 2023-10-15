@@ -14,12 +14,11 @@
 
 # Requirements
 
-### Kubernetes
-A Kubernetes cluster with at least 3 worker nodes.
-### Storage
-A default storage class based on a storage manager for example, [Ceph](https://github.com/mohammadfalahat/rook) or [Rancher Local-Path-Provisioner](https://github.com/rancher/local-path-provisioner)
-### DH2I License
-Get a DH2I free trial license: [DH2I Free Trial License](https://clients.dh2i.com/Default.aspx)
+**Kubernetes** : A Kubernetes cluster with at least 3 worker nodes.
+
+**Storage** : A default storage class based on a storage manager for example, [Ceph](https://github.com/mohammadfalahat/rook) or [Rancher Local-Path-Provisioner](https://github.com/rancher/local-path-provisioner)
+
+**DH2I License** : Get a DH2I free trial license: [DH2I Free Trial License](https://clients.dh2i.com/Default.aspx)
 
 # Installation
 
