@@ -1,4 +1,4 @@
-# mssql-kubernetes
+# Microsoft SQL Server Mirroring Always On High Availability On Kubernetes
 
 ![image](https://github.com/falahatme/mssql-kubernetes/assets/7458874/87e1257e-0063-40fb-9eb9-46f969077146)
 
