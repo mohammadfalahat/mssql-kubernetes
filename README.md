@@ -59,7 +59,7 @@ After making these changes, run `installer.sh`:
 ./installer.sh
 ```
 
-When the installation is finished, it will provide you with a SQL query code. Log in to the primary node with the following port and credentials: Worker1_IP, 31111; user=SA; Password=DB_PASSWORD. Run that query just once.
+When the installation is finished, it will provide you with a SQL query code. Log in to the primary node with the following port and credentials: `Worker1_IP, 31111; user=SA; Password=DB_PASSWORD`. Run that query just once.
 
 Now, you can connect directly to the Kubernetes load balancer service using port 30433, which connects you to one of the MSSQL instances randomly.
 
