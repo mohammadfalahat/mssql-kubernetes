@@ -14,7 +14,7 @@
 
 # Requirements
 
-**Kubernetes** : A Kubernetes cluster with at least 3 worker nodes.
+**Kubernetes** : A Kubernetes cluster with at least 3 worker nodes. [Kubespray](https://github.com/mohammadfalahat/kubespray) is an easy kube installer.
 
 **Storage** : A default storage class based on a storage manager for example, [Ceph](https://github.com/mohammadfalahat/rook) or [Rancher Local-Path-Provisioner](https://github.com/rancher/local-path-provisioner)
 
