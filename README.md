@@ -31,24 +31,29 @@ Deploy PVC, Services, and Deployments:
 kubectl apply -f https://raw.githubusercontent.com/mohammadfalahat/mssql-kubernetes/main/deployment.yml
 ```
 
-Check  pvc and deployments
+Check PVC (Persistent Volume Claim):
 
 ```
 kubectl get pvc
-kubectl get po -o wide
 ```
 
-if mssql pods are in running state and pvc's are in Bound state then run installer:
+Check mssql Pods:
+
+```
+kubectl get pod -l lblabel=mssql-ha -o wide 
+```
+
+If the MSSQL pods are in a running state and the PVCs are in a bound state, then run the installer:
 
 ```
 wget https://raw.githubusercontent.com/mohammadfalahat/mssql-kubernetes/main/installer.sh && chmod +x installer.sh && vim installer.sh
 ```
 
-replace your license with DH2I_LICENSE variable inside installer.sh
+replace your license with DH2I_LICENSE variable inside `installer.sh`
 
-you can also change AG_NAME, DB_PASSWORD and CLUSTER_PASSWORD
+you can also modify `AG_NAME`, `DB_PASSWORD` and `CLUSTER_PASSWORD`
 
-then run installer.sh:
+After making these changes, run `installer.sh`:
 
 ```
 ./installer.sh
