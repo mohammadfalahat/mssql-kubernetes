@@ -12,7 +12,7 @@
 
 ✔️ Failover Handler Based On [DH2I Dxe Enterprise](https://dh2i.com/dxenterprise-high-availability/)
 
-# Requirements
+# Prerequisites
 
 **Kubernetes** : A Kubernetes cluster with at least 3 worker nodes. [Kubespray](https://github.com/mohammadfalahat/kubespray) is an easy kube installer.
 
