@@ -91,5 +91,6 @@ You can test failover handling and performance with a stress test program. [Here
 The stress test program is a tool for evaluating the failover handling and performance of your MSSQL cluster. Stress tests simulate heavy usage and various conditions to ensure your system can handle high loads and failover events effectively.
 While the stress test is running, you can simulate a primary node failure (e.g., power off the primary worker node). This is a critical test to ensure that the failover mechanism works as expected and the secondary nodes can seamlessly take over, maintaining service availability.
 
-# How does it work
-soon ...
+# How it works
+I've explained how it works step by step in my Medium article. If you're interested in understanding the inner workings, you can read the article here:
+https://medium.com/@mohammadfalahat/deploy-sql-server-always-on-high-availability-mirroring-in-kubernetes-with-automatic-failover-6f8c8ebfa8de
