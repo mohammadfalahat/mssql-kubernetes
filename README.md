@@ -93,4 +93,5 @@ While the stress test is running, you can simulate a primary node failure (e.g.,
 
 # How it works
 I've explained how it works step by step in my Medium article. If you're interested in understanding the inner workings, you can read the article here:
-https://medium.com/@mohammadfalahat/deploy-sql-server-always-on-high-availability-mirroring-in-kubernetes-with-automatic-failover-6f8c8ebfa8de
+
+[https://medium.com/@mohammadfalahat/deploy-sql-server-always-on-high-availability-mirroring-in-kubernetes-with-automatic-failover](https://medium.com/@mohammadfalahat/deploy-sql-server-always-on-high-availability-mirroring-in-kubernetes-with-automatic-failover-6f8c8ebfa8de)https://medium.com/@mohammadfalahat/deploy-sql-server-always-on-high-availability-mirroring-in-kubernetes-with-automatic-failover-6f8c8ebfa8de
